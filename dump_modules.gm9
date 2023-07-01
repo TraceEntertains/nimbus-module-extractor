@@ -2,47 +2,38 @@ if not ask "Dump SSL, Friends, ACT, and Miiverse modules?"
 	goto Exit
 end
 
-set OUT "0:/nimbusmodules"
+set OUT 0:/nimbusmodules
+set OUTPATCHES $[OUT]/patches
 if exist $[OUT]
     rm $[OUT]
 end
-mkdir $[OUT]
 
-mkdir $[OUT]/0004013000002F02
-mkdir $[OUT]/0004013000003202
-mkdir $[OUT]/0004013000003802
+mkdir $[OUTPATCHES]/ssl # 0004013000002F02
+mkdir $[OUTPATCHES]/friends # 0004013000003202
+mkdir $[OUTPATCHES]/act # 0004013000003802
+mkdir $[OUTPATCHES]/miiverse # 00040030(0000BC02/0000BD02/0000BE02)
 
 if chk $[REGION] JPN
-	set MIIVERSEID "000400300000BC02"
 	set MIIVERSEIDLOW "0000BC02"
 elif chk $[REGION] USA
-	set MIIVERSEID "000400300000BD02"
 	set MIIVERSEIDLOW "0000BD02"
 elif chk $[REGION] EUR
-	set MIIVERSEID "000400300000BE02"
 	set MIIVERSEIDLOW "0000BE02"
 end
-	
-mkdir $[OUT]/$[MIIVERSEID]
 
 find 1:/title/00040130/00002f02/content/*.app APP
-imgmount $[APP]
-cp "G:/exefs.bin" $[OUT]/0004013000002F02/exefs.bin
-imgumount
+extrcode $[APP] $[OUTPATCHES]/ssl/code.bin
 
 find 1:/title/00040130/00003202/content/*.app APP
-imgmount $[APP]
-cp "G:/exefs.bin" $[OUT]/0004013000003202/exefs.bin
-imgumount
+extrcode $[APP] $[OUTPATCHES]/friends/code.bin
 
 find 1:/title/00040130/00003802/content/*.app APP
-imgmount $[APP]
-cp "G:/exefs.bin" $[OUT]/0004013000003802/exefs.bin
-imgumount
+extrcode $[APP] $[OUTPATCHES]/act/code.bin
 
-find 1:/title/00040030/$[MIIVERSEIDLOW]/content/*.app APP
-imgmount $[APP]
-cp "G:/exefs.bin" $[OUT]/$[MIIVERSEID]/exefs.bin
-imgumount
+if chk -u $[MIIVERSEIDLOW] ""
+	find 1:/title/00040030/$[MIIVERSEIDLOW]/content/*.app APP
+	extrcode $[APP] $[OUTPATCHES]/miiverse/code.bin
+	fdummy $[OUTPATCHES]/miiverse/$[REGION].region 0
+end
 
 @Exit
