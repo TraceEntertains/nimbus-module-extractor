@@ -8,9 +8,11 @@ if exist $[OUT]
     rm $[OUT]
 end
 
-mkdir $[OUTPATCHES]/ssl # 0004013000002F02
-mkdir $[OUTPATCHES]/friends # 0004013000003202
 mkdir $[OUTPATCHES]/act # 0004013000003802
+mkdir $[OUTPATCHES]/friends # 0004013000003202
+mkdir $[OUTPATCHES]/http # 0004013000002902
+mkdir $[OUTPATCHES]/socket # 0004013000002E02
+mkdir $[OUTPATCHES]/ssl # 0004013000002F02
 mkdir $[OUTPATCHES]/miiverse # 00040030(0000BC02/0000BD02/0000BE02)
 
 if chk $[REGION] JPN
@@ -21,14 +23,20 @@ elif chk $[REGION] EUR
 	set MIIVERSEIDLOW "0000BE02"
 end
 
-find 1:/title/00040130/00002f02/content/*.app APP
-extrcode $[APP] $[OUTPATCHES]/ssl/code.bin
+find 1:/title/00040130/00003802/content/*.app APP
+extrcode $[APP] $[OUTPATCHES]/act/code.bin
 
 find 1:/title/00040130/00003202/content/*.app APP
 extrcode $[APP] $[OUTPATCHES]/friends/code.bin
 
-find 1:/title/00040130/00003802/content/*.app APP
-extrcode $[APP] $[OUTPATCHES]/act/code.bin
+find 1:/title/00040130/00002902/content/*.app APP
+extrcode $[APP] $[OUTPATCHES]/http/code.bin
+
+find 1:/title/00040130/00002e02/content/*.app APP
+extrcode $[APP] $[OUTPATCHES]/socket/code.bin
+
+find 1:/title/00040130/00002f02/content/*.app APP
+extrcode $[APP] $[OUTPATCHES]/ssl/code.bin
 
 if chk -u $[MIIVERSEIDLOW] ""
 	find 1:/title/00040030/$[MIIVERSEIDLOW]/content/*.app APP
